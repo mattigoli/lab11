@@ -21,11 +21,11 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-val mainClass: String by project
+val main: String? by project
 
 application {
     // The following allows to run with: ./gradlew -PmainClass=it.unibo.oop.MyMainClass run
-    mainClass.set(project.properties["mainClass"].toString())
+    mainClass.set(main ?: "it.unibo.oop.lab.streams.LambdaFilter")
 }
 
 val test by tasks.getting(Test::class) {

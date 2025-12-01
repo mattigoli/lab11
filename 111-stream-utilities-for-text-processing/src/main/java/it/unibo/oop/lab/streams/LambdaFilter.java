@@ -7,8 +7,11 @@ import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.io.Serial;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -41,7 +44,24 @@ public final class LambdaFilter extends JFrame {
         /**
          * Commands.
          */
-        IDENTITY("No modifications", Function.identity());
+        IDENTITY("No modifications", Function.identity()),
+        LOWER_CASE("To lower case", s -> s.toLowerCase(Locale.ITALY)),
+        COUNT_CHAR("Count char", s -> Integer.toString(s.length())),
+        COUNT_LINES("Count lines", s -> Long.toString(s.lines().count())),
+        ALPHABETICAL_ORDER(
+            "The word in alphabetical order",
+            s -> Stream.of(s.split("\\s"))
+                .sorted((w1, w2) -> w1.toLowerCase(Locale.ITALY).compareTo(w2.toLowerCase(Locale.ITALY)))
+                .collect(Collectors.joining("\n"))
+            ),
+        EACH_WORD_COUNT(
+            "Write the count for each word",
+            s -> Stream.of(s.split("\\s"))
+                .collect(Collectors.groupingBy(c -> c, Collectors.counting()))
+                .entrySet().stream()
+                .map(w -> w.getKey() + " -> " + w.getValue())
+                .collect(Collectors.joining("\n"))
+            );
 
         private final String commandName;
         private final Function<String, String> fun;
